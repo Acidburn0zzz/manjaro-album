@@ -1,0 +1,36 @@
+::: Album :::
+-------------
+Album is a snapshot manager for the btrfs filesystem. 
+You can use it to create snapshots of your system.
+You will next be able to boot into a snapshot from the grub boot menu.
+When you boot into a snapshot, album is able to roll back your main 
+system state into the snapshot state.
+
+
+Requirements
+-------------
+* a separate boot partition
+* a separate home partiton ( or subvolume)
+* a btrfs partition with the main system installed in a subvolume named 
+  "manjaro_i686" or "manjaro_x86_64" depending on your architecture
+* packages: btrfs-progs, grub-common, python
+
+
+Installation
+------------
+-copy the file "11_btrfs-snapshots" in /etc/grub.d/
+-use the file "update-grub" as a replacement of your current /usr/sbin/update-grub
+-copy other file where you want but in th same folder (I will change this after whith
+  creating a pkgbuild) 
+-run with /path/to/album
+ 
+Usage
+-----
+View options and help:
+# album --help
+
+Create a snapshot:
+# album --snapshot
+
+Rollback your main system to a snapshot state:
+# album --rollback

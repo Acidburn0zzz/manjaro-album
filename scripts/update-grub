@@ -1,0 +1,12 @@
+#! /bin/sh
+
+# exit if we are in a snapshot
+if [ -f /snapshot-version ]; then
+  SNAPSHOT_VER=`cat /snapshot-version`
+  echo "You are in the snapshot ${SNAPSHOT_VER}. 
+It's not recommended to update grub.cfg
+Exiting"
+  exit 1
+fi
+
+grub-mkconfig -o /boot/grub/grub.cfg

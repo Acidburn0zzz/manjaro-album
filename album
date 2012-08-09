@@ -1,0 +1,63 @@
+#! /usr/bin/python
+
+from os import geteuid
+from sys import argv, exit
+from subprocess import check_output
+import getopt
+from snap_and_roll import make_snap, make_rollback 
+
+
+def usage():
+	print("usage: ", argv[0], "actions")
+	print("actions:")
+	print("   -s, --snap       Create a snapshot of the current system")
+	print("   -r, --rollback   Roll back the main system into the state of the current snapshot state")
+	print("   -h, --help       This message")
+
+def is_root():
+	if geteuid() == 0:
+		return True
+	else:
+		return False
+
+def is_btrfs():
+	fs = check_output(["grub-probe", "--target=fs", "/"])
+	lenght = len(fs)
+	fs = (fs[:lenght - 1])
+	if fs == b'btrfs':
+		return True
+	else:
+		return False
+
+def main(argv):
+	try:
+		opts, args = getopt.gnu_getopt(argv, "hsr", ["help", "snapshot", "rollback"])
+	except getopt.GetoptError:
+		usage()
+		exit(2)
+	if opts == []:
+		usage()
+		exit(2)
+	for opt, arg in opts:
+		if opt in ("-h", "--help"):
+			usage()
+			exit(0)
+		if opt in ("-s", "--snapshot"):
+			print("make snap")
+			make_snap()
+		if opt in ("-r", "--rollback"):
+			print("make rollback")
+			make_rollback()
+
+
+if __name__ == "__main__":
+	if is_root() is True:
+		if is_btrfs() is True:
+			main(argv[1:])
+		else:
+			print("This program supports only root filesystem in a btrfs partition.")
+			exit(1)
+	else:
+		print("You must be root to run this program.")
+		exit(1)
+
