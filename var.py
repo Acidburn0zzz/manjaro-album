@@ -7,9 +7,7 @@ from os.path import join
 from subprocess import check_output
 
 def get_device(path):
-	device = check_output(["grub-probe", "--target=device", path])
-	lenght = len(device)
-	device = (device[:lenght - 1]) 
+	device = str(check_output(["grub-probe", "--target=device", "/"]), "utf-8").strip("\n") 
 	return device
 
 date = strftime("%Y-%m-%d_%H:%M", localtime())

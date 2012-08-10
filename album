@@ -4,14 +4,17 @@ from os import geteuid
 from sys import argv, exit
 from subprocess import check_output
 import getopt
-from snap_and_roll import make_snap, make_rollback 
 
+from snap_and_roll import make_snap, make_rollback 
+from snapshots import print_snapshots_list, prompt_delete_snapshot
 
 def usage():
 	print("usage: ", argv[0], "actions")
 	print("actions:")
 	print("   -s, --snap       Create a snapshot of the current system")
 	print("   -r, --rollback   Roll back the main system into the state of the current snapshot state")
+	print("   -l, --list       List available snapshots")
+	print("   -d, --delete     Choose a snapshot to delete") 
 	print("   -h, --help       This message")
 
 def is_root():
@@ -21,17 +24,15 @@ def is_root():
 		return False
 
 def is_btrfs():
-	fs = check_output(["grub-probe", "--target=fs", "/"])
-	lenght = len(fs)
-	fs = (fs[:lenght - 1])
-	if fs == b'btrfs':
+	fs = str(check_output(["grub-probe", "--target=fs", "/"]), "utf-8").strip("\n")
+	if fs == "btrfs":
 		return True
 	else:
 		return False
 
 def main(argv):
 	try:
-		opts, args = getopt.gnu_getopt(argv, "hsr", ["help", "snapshot", "rollback"])
+		opts, args = getopt.gnu_getopt(argv, "hsrld", ["help", "snapshot", "rollback", "list", "delete"])
 	except getopt.GetoptError:
 		usage()
 		exit(2)
@@ -43,11 +44,18 @@ def main(argv):
 			usage()
 			exit(0)
 		if opt in ("-s", "--snapshot"):
-			print("make snap")
+			print("Shooting you system")
 			make_snap()
+			print("Done")
 		if opt in ("-r", "--rollback"):
-			print("make rollback")
+			print("Rolling back your system ")
 			make_rollback()
+			print("Done")
+		if opt in ("-l", "--list"):
+			print_snapshots_list()
+		if opt in ("-d", "--delete"):
+			print_snapshots_list()
+			prompt_delete_snapshot()
 
 
 if __name__ == "__main__":
