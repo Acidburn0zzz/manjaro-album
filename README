@@ -19,15 +19,20 @@ Requirements
 Installation
 ------------
 -use the file "update-grub" as a replacement of your current /usr/sbin/update-grub
--
  
 Usage
 -----
 View options and help:
-# album --help
+# album-cli --help
 
 Create a snapshot:
-# album --snapshot
+# album-cli --snapshot
 
 Rollback your main system to a snapshot state:
-# album --rollback
+# album-cli --rollback
+
+List availables snapshots:
+# album-cli --list
+
+Choose a snapshot to delete:
+# album-cli --delete
