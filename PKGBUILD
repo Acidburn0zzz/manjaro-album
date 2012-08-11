@@ -32,7 +32,7 @@ build() {
 }
  
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$pkgname"
   python setup.py install --root="$pkgdir/" --optimize=1
 }
 
