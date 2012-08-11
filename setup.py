@@ -10,4 +10,5 @@ setup(name='Album',
       author_email='guillaume@manjaro.org',
       url='https://git.manjaro.org/core/album',
       packages=['album'],
+      platform='any'
      )

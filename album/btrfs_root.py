@@ -5,7 +5,7 @@ from subprocess import call
 from os.path import isdir
 from os import mkdir
 
-from var import btrfs_device, btrfs_mount_point
+from album.var import btrfs_device, btrfs_mount_point
 
 def mount_btrfs_root():
 	if isdir(btrfs_mount_point) is False:

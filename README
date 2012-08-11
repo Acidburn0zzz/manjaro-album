@@ -18,11 +18,8 @@ Requirements
 
 Installation
 ------------
--copy the file "11_btrfs-snapshots" in /etc/grub.d/
 -use the file "update-grub" as a replacement of your current /usr/sbin/update-grub
--copy other file where you want but in th same folder (I will change this after whith
-  creating a pkgbuild) 
--run with /path/to/album
+-
  
 Usage
 -----

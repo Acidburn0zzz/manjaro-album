@@ -6,10 +6,10 @@ from os import mkdir
 from os.path import join
 from sys import exit
 
-from btrfs_root import mount_btrfs_root, umount_btrfs_root
-from grub import update_grub
+from album.btrfs_root import mount_btrfs_root, umount_btrfs_root
+from album.grub import update_grub
 
-from var import snapshot_dir_path, snapshot_dir
+from album.var import snapshot_dir_path, snapshot_dir
 
 def create_snapshot(dir_path, snap_path):
 	if isdir(snapshot_dir_path) is False:

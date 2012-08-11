@@ -15,7 +15,7 @@ install=
 source=()
 
 _gitroot=git://git.manjaro.org/core/album.git
-_gitname=album
+_gitname=$pkgname
 
 build() {
   cd "$srcdir"
@@ -34,6 +34,8 @@ build() {
 package() {
   cd "$srcdir/$pkgname"
   python setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm755 "${srcdir}/$pkgname/album-cli" "${pkgdir}/usr/bin/album-cli"
+  install -Dm755 "${srcdir}/$pkgname/scripts/11_btrfs-snapshots" "${pkgdir}/etc/grub.d/11_btrfs-snapshots"
 }
 
 # vim:set ts=2 sw=2 et:
