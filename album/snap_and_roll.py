@@ -6,13 +6,13 @@ from os import remove
 from os.path import join
 from shutil import move
 
-from ver_file import snap_ver_file_exists, write_snap_ver_file
-from btrfs_root import mount_btrfs_root, umount_btrfs_root 
-from snapshots import create_snapshot, delete_snapshot
-from boot_folder import copy_vmlinuz_and_initramfs, move_vmlinuz_and_initramfs
-from grub import update_grub
+from album.ver_file import snap_ver_file_exists, write_snap_ver_file
+from album.btrfs_root import mount_btrfs_root, umount_btrfs_root 
+from album.snapshots import create_snapshot, delete_snapshot
+from album.boot_folder import copy_vmlinuz_and_initramfs, move_vmlinuz_and_initramfs
+from album.grub import update_grub
 
-from var import *
+from album.var import *
 
 def make_snap():
 	# exit if we are already in a snapshot

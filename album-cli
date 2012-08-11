@@ -5,8 +5,8 @@ from sys import argv, exit
 from subprocess import check_output
 import getopt
 
-from snap_and_roll import make_snap, make_rollback 
-from snapshots import print_snapshots_list, prompt_delete_snapshot
+from album.snap_and_roll import make_snap, make_rollback 
+from album.snapshots import print_snapshots_list, prompt_delete_snapshot
 
 def usage():
 	print("usage: ", argv[0], "actions")

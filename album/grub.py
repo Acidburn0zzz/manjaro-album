@@ -3,9 +3,9 @@
 
 from subprocess import call
 
-from ver_file import snap_ver_file_exists
+from album.ver_file import snap_ver_file_exists
 
-from var import main_system_dir, btrfs_device, btrfs_mount_point
+from album.var import main_system_dir, btrfs_device, btrfs_mount_point
 
 def update_grub():
 	if snap_ver_file_exists() is False:

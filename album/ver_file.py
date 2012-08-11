@@ -3,7 +3,7 @@
 
 from os.path import isfile
 
-from var import snap_ver_file_path
+from album.var import snap_ver_file_path
 
 def snap_ver_file_exists():
 	return isfile(snap_ver_file_path)
