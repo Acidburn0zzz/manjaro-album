@@ -3,7 +3,7 @@
 
 from subprocess import call, check_output
 from os import mkdir
-from os.path import join
+from os.path import join, isdir
 from sys import exit
 
 from album.btrfs_root import mount_btrfs_root, umount_btrfs_root
