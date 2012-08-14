@@ -19,7 +19,7 @@ def make_snap():
 	if snap_ver_file_exists() is True:
 		with open(snap_ver_file_path, "r") as ver_file:
 			ver = ver_file.read()
-		print("""You are already in the snapshot {}.
+		print("""You are already in {}.
 You can't create a snapshot.""".format(ver))
 		exit(1)
 
@@ -78,8 +78,8 @@ You must boot into a snapshot to rollback your system.""")
 	# erase the snapshot-version file copied in the main system
 	remove(main_system_dir_path+snap_ver_file_path)
 
-	# copy initramfs and vmlinuz from the snapshot to real /boot
-	copy_vmlinuz_and_initramfs(snap_path+"/boot", "/boot")
+	# move initramfs and vmlinuz from the new main system to real /boot
+	move_vmlinuz_and_initramfs(main_system_dir_path+"/boot", "/boot")
 
 	# umount the root of the btrfs volume
 	umount_btrfs_root()
