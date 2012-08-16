@@ -1,0 +1,65 @@
+#! /usr/bin/python
+# -*-coding:utf-8 -*
+
+from gi.repository import Gtk, GdkPixbuf, Gdk
+
+from album.snapshots import list_snapshots, delete_snapshots
+from album.snap_and_roll import make_snap, make_rollback
+
+class Handler:
+	def on_MainWindow_delete_event(self, *arg):
+		Gtk.main_quit()
+
+	def on_QuitButton_clicked(self, *arg):
+		Gtk.main_quit()
+
+	def on_SnapButton_clicked(self, widget):
+		#make_snap()
+		print("snap")
+
+	def on_RollbackButton_clicked(self, widget):
+		#make_rollback()
+		print("rollback")
+
+	def on_cellrenderertoggle1_toggled(self, widget, line):
+		snap_list[line][1] = not snap_list[line][1]
+
+	def on_DeleteButton_clicked(self, widget):
+		line = 0
+		delete_list = ()
+		while line <  len(snap_list):
+			if snap_list[line][1] is True:
+				delete_list.append(snap_list[line][0])
+			line += 1
+		#delete_snapshots(delete_list)
+		print(delete_list)
+
+	def on_RefreshButton_clicked(self, widget):
+		#snap_list.clear()
+		#for i, snap_name in list_snapshots():
+		#	snap_list.append([snap_name, False])
+		snap_list.append(["snap3", False])
+		snap_list.append(["snap4", False])
+
+	def on_CancelButton_clicked(self, widget):
+		line = 0
+		while line <  len(snap_list):
+			snap_list[line][1] = False
+			line += 1
+
+
+interface = Gtk.Builder()
+interface.add_from_file('gui.glade')
+
+snap_list = interface.get_object('snap_list')
+snap_list.clear()
+#for i, snap_name in list_snapshots():
+#	snap_list.append([snap_name, False])
+snap_list.append(["snap1", False])
+snap_list.append(["snap2", False])
+
+
+interface.connect_signals(Handler())
+window = interface.get_object("MainWindow")
+window.show_all()
+Gtk.main()

@@ -8,7 +8,7 @@ pkgdesc="A snapshot manager for the btrfs filesystem"
 arch=(any)
 url="https://git.manjaro.org/core/album"
 license=('GPL')
-depends=('python' 'btrfs-progs' 'grub-common') #gtk3, python-gobject
+depends=('python' 'btrfs-progs' 'grub-common', 'gtk3', 'python-gobject')
 makedepends=('git')
 options=(!emptydirs)
 install=
@@ -34,6 +34,8 @@ build() {
 package() {
   cd "$srcdir/$pkgname"
   python setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm755 "${srcdir}/$pkgname/gui/album.glade" "${pkgdir}/usr/share/album/album.glade"
+  install -Dm755 "${srcdir}/$pkgname/album-gui" "${pkgdir}/usr/bin/album-gui"
   install -Dm755 "${srcdir}/$pkgname/album-cli" "${pkgdir}/usr/bin/album-cli"
   install -Dm755 "${srcdir}/$pkgname/scripts/11_btrfs-snapshots" "${pkgdir}/etc/grub.d/11_btrfs-snapshots"
 }

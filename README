@@ -13,7 +13,7 @@ Requirements
 * a separate home partiton ( or subvolume)
 * a btrfs partition with the main system installed in a subvolume named 
   "manjaro_i686" or "manjaro_x86_64" depending on your architecture
-* packages: btrfs-progs, grub-common, python
+* packages: btrfs-progs, grub-common, python, gtk3, python-gobject
 
 
 Installation
@@ -34,5 +34,5 @@ Rollback your main system to a snapshot state:
 List availables snapshots:
 # album-cli --list
 
-Choose a snapshot to delete:
+Choose snapshots to delete:
 # album-cli --delete

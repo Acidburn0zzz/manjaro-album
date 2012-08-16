@@ -16,8 +16,9 @@ def create_snapshot(dir_path, snap_path):
 		mkdir(snapshot_dir_path)
 	call(["btrfs", "subvolume", "snapshot", dir_path, snap_path])
 
-def delete_snapshot(snap_path):
-	call(["btrfs", "subvolume", "delete", snap_path])
+def delete_snapshot(name_list):
+	for snap_name in name_list:
+		call(["btrfs", "subvolume", "delete", join(snapshot_dir_path, snap_name)])
 
 def list_snapshots():
 	first_list = str(check_output(["btrfs", "subvolume", "list", "/"]), "utf-8").split("\n")
@@ -33,7 +34,7 @@ def list_snapshots():
 	i = 1
 	for snap_name in snapshots_list:
 		full_list[i] = snap_name
-		i = i + 1
+		i += 1
 	return full_list
 
 def print_snapshots_list():
@@ -45,20 +46,27 @@ def print_snapshots_list():
 
 def prompt_delete_snapshot():
 	snapshots_list = list_snapshots()
-	selec_number = input("Enter the number of the snapshot you want to delete: ")
-	try:
-		selec_number = int(selec_number)
-		snap = snapshots_list[selec_number]
-	except ValueError:
-		print("Unrecognised number")
-		exit(1)
-	except KeyError:
-		print("This snapshot number doesn't exist")
-		exit(1)
-	decision = input("Are you sure you want to delete {} ? [y/N]: ".format(snap))
+	delete_list = ()
+	selec_numbers = input("""Enter the number(s) of the snapshot you want to delete
+separated by commas: """)
+	selec_numbers = selec_numbers.split(",")
+	for number in selec_numbers:
+		try:
+			number = int(number)
+			delete_list.append(snapshots_list[number])
+		except ValueError:
+			print("Unrecognised number(s)")
+			exit(1)
+		except KeyError:
+			print("Some numbers don't exist")
+			exit(1)
+	print("Here are the snapshot(s) you want to delete:")
+	for name in delete_list:
+		print("  --"+name)
+	decision = input("Are you sure ? [y/N]: ")
 	if decision.lower() == "y":
 		mount_btrfs_root()
-		delete_snapshot(join(snapshot_dir_path, snap))
+		delete_snapshot(delete_list)
 		umount_btrfs_root()
 		update_grub()
 	else:
