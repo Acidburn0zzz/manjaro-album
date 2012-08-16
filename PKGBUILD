@@ -2,13 +2,13 @@
 # Maintainer: Guillaume Benoit <guillaume@manjaro.org>
 
 pkgname=album
-pkgver=20120814
+pkgver=20120816
 pkgrel=1
 pkgdesc="A snapshot manager for the btrfs filesystem"
 arch=(any)
 url="https://git.manjaro.org/core/album"
 license=('GPL')
-depends=('python' 'btrfs-progs' 'grub-common', 'gtk3', 'python-gobject')
+depends=('python' 'btrfs-progs' 'grub-common' 'gtk3' 'python-gobject')
 makedepends=('git')
 options=(!emptydirs)
 install=
