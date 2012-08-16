@@ -14,12 +14,10 @@ class Handler:
 		Gtk.main_quit()
 
 	def on_SnapButton_clicked(self, widget):
-		#make_snap()
-		print("snap")
+		make_snap()
 
 	def on_RollbackButton_clicked(self, widget):
-		#make_rollback()
-		print("rollback")
+		make_rollback()
 
 	def on_cellrenderertoggle1_toggled(self, widget, line):
 		snap_list[line][1] = not snap_list[line][1]
@@ -31,15 +29,12 @@ class Handler:
 			if snap_list[line][1] is True:
 				delete_list.append(snap_list[line][0])
 			line += 1
-		#delete_snapshots(delete_list)
-		print(delete_list)
+		delete_snapshots(delete_list)
 
 	def on_RefreshButton_clicked(self, widget):
-		#snap_list.clear()
-		#for i, snap_name in list_snapshots():
-		#	snap_list.append([snap_name, False])
-		snap_list.append(["snap3", False])
-		snap_list.append(["snap4", False])
+		snap_list.clear()
+		for i, snap_name in list_snapshots():
+			snap_list.append([snap_name, False])
 
 	def on_CancelButton_clicked(self, widget):
 		line = 0
@@ -49,14 +44,12 @@ class Handler:
 
 
 interface = Gtk.Builder()
-interface.add_from_file('gui.glade')
+interface.add_from_file('/usr/share/album/album.glade')
 
 snap_list = interface.get_object('snap_list')
 snap_list.clear()
-#for i, snap_name in list_snapshots():
-#	snap_list.append([snap_name, False])
-snap_list.append(["snap1", False])
-snap_list.append(["snap2", False])
+for i, snap_name in list_snapshots():
+	snap_list.append([snap_name, False])
 
 
 interface.connect_signals(Handler())
