@@ -5,6 +5,24 @@ from gi.repository import Gtk, GdkPixbuf, Gdk
 
 from album.snapshots import list_snapshots, delete_snapshots
 from album.snap_and_roll import make_snap, make_rollback
+from album.ver_file import snap_ver_file_exists
+
+interface = Gtk.Builder()
+interface.add_from_file('gui/album.glade')
+
+RollConfDialog = interface.get_object("RollConfDialog")
+RollSuccessDialog = interface.get_object("RollSuccessDialog")
+RollErrorDialog = interface.get_object("RollErrorDialog")
+
+snap_list = interface.get_object('snap_list')
+
+def refresh_snap_list():
+	snap_list.clear()
+	for snap_name in list_snapshots().values():
+		snap_list.append([snap_name, False])
+
+refresh_snap_list()
+
 
 class Handler:
 	def on_MainWindow_delete_event(self, *arg):
@@ -15,9 +33,32 @@ class Handler:
 
 	def on_SnapButton_clicked(self, widget):
 		make_snap()
+		refresh_snap_list()
 
 	def on_RollbackButton_clicked(self, widget):
+		if snap_ver_file_exists() is False:
+			RollErrorDialog.run()
+		else:
+			RollConfDialog.run()
+
+	def on_RollConfDialog_response(self, *arg):
 		make_rollback()
+		refresh_snap_list()
+
+	def on_RollConfDialog_close(self, *arg):
+		RollConfDialog.destroy()
+
+	def on_RollErrorDialog_response(self, *arg):
+		RollErrorDialog.destroy()
+
+	def on_RollErrorDialog_close(self, *arg):
+		RollErrorDialog.destroy()
+
+	def on_RollSuccessButton_response(self, *arg):
+		RollSuccessDialog.destroy()
+
+	def on_RollSuccessButton_close(self, *arg):
+		RollSuccessDialog.destroy()
 
 	def on_cellrenderertoggle1_toggled(self, widget, line):
 		snap_list[line][1] = not snap_list[line][1]
@@ -32,9 +73,7 @@ class Handler:
 		delete_snapshots(delete_list)
 
 	def on_RefreshButton_clicked(self, widget):
-		snap_list.clear()
-		for i, snap_name in list_snapshots():
-			snap_list.append([snap_name, False])
+		refresh_snap_list()
 
 	def on_UnselectButton_clicked(self, widget):
 		line = 0
@@ -42,20 +81,8 @@ class Handler:
 			snap_list[line][1] = False
 			line += 1
 
-	#def on_RollConfButton_clicked(self, widget):
-		
-
-
-interface = Gtk.Builder()
-interface.add_from_file('gui/album.glade')
-
-snap_list = interface.get_object('snap_list')
-snap_list.clear()
-for i, snap_name in list_snapshots():
-	snap_list.append([snap_name, False])
-
 
 interface.connect_signals(Handler())
-window = interface.get_object("MainWindow")
-window.show_all()
+MainWindow = interface.get_object("MainWindow")
+MainWindow.show_all()
 Gtk.main()

@@ -13,7 +13,7 @@ from album.snapshots import create_snapshot
 from album.boot_folder import copy_vmlinuz_and_initramfs, move_vmlinuz_and_initramfs
 from album.grub import update_grub
 
-from album.var import *
+from album.var import snap_ver_file_path, snapshot_dir_path, main_system_dir_path, date
 
 def make_snap():
 	# exit if we are already in a snapshot
@@ -23,6 +23,8 @@ def make_snap():
 		print("""You are already in {}.
 You can't create a snapshot.""".format(ver))
 		exit(1)
+	else:
+		print("Shooting you system")
 
 	# mount the root of the btrfs volume
 	mount_btrfs_root()
@@ -44,6 +46,8 @@ You can't create a snapshot.""".format(ver))
 	# update grub.cfg file to be able to boot to the new created snapshot
 	update_grub()
 
+	print("The snapshot has been successfully created")
+
 
 def make_rollback():
 	# exit if we are not in a snapshot
@@ -51,6 +55,8 @@ def make_rollback():
 		print("""You are not in a recognised snapshot.
 You must boot into a snapshot to rollback your system.""")
 		exit(1)
+	else:
+		print("Rolling back your system ")
 
 	# define snap_ver from snap_ver_file
 	with open(snap_ver_file_path, "r") as ver_file:
@@ -62,17 +68,17 @@ You must boot into a snapshot to rollback your system.""")
 
 	# snapshot the main system so the user can roll back to it
 	# even after have done a rollback to the current snapshot
-	main_system_dir_backup_path = join(snapshot_dir_path, "before-rollback-to-"+snap_ver)
+	snap_ver_new = "snapshot_"+date
+	main_system_dir_backup_path = join(snapshot_dir_path, snap_ver_new)
 	create_snapshot(main_system_dir_path, main_system_dir_backup_path)
 
 	# move initramfs and vmlinuz to the old main system /boot directory
 	move_vmlinuz_and_initramfs("/boot", main_system_dir_backup_path+"/boot")
 
 	# write a file to the recently moved system to be recognised as a snapshot
-	snap_ver_new = "snapshot_"+date
 	write_snap_ver_file(main_system_dir_backup_path, snap_ver_new)
 
-	# roll back the system by creating a new snapshot from the snapshot to the main system
+	# roll back the system by creating a new main system subvolume from the snapshot
 	call(["btrfs", "subvolume", "delete", main_system_dir_path])
 	create_snapshot(snap_path, main_system_dir_path)
 
@@ -87,4 +93,9 @@ You must boot into a snapshot to rollback your system.""")
 
 	# update grub.cfg file
 	update_grub()
+
+	print("Your system has been successfully rolled back")
+	print("""For safety reason a snapshot of your system
+have been made before the rollback, this snapshot is:""")
+	print("  * "+snap_ver_new)
 

@@ -45,11 +45,9 @@ def main(argv):
 			usage()
 			exit(0)
 		if opt in ("-s", "--snapshot"):
-			print("Shooting you system")
 			make_snap()
 			print("Done")
 		if opt in ("-r", "--rollback"):
-			print("Rolling back your system ")
 			make_rollback()
 			print("Done")
 		if opt in ("-l", "--list"):

@@ -118,7 +118,7 @@ for snap in `ls -1 ${SNAPSHOT_PATH}` ; do
     fi
 
     if test -n "${initrd}" ; then
-      gettext_printf "Found initrd image: %s\n" "${initrd} in snapshot: $snap" >&2
+      gettext_printf "Found initrd image: %s\n" "${initrd} ($snap)" >&2
       linux_root_device_thisversion=${GRUB_DEVICE}
     fi
 

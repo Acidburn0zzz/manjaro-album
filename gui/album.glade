@@ -192,6 +192,8 @@ your system</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="message_type">warning</property>
+    <signal name="close" handler="on_RollConfDialog_close" swapped="no"/>
+    <signal name="response" handler="on_RollConfDialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="messagedialog-vbox1">
         <property name="can_focus">False</property>
@@ -226,7 +228,6 @@ your system</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="on_RollConfButton_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -271,6 +272,8 @@ in the current state of this snapshot ?</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="message_type">error</property>
     <property name="buttons">close</property>
+    <signal name="close" handler="on_RollErrorDialog_close" swapped="no"/>
+    <signal name="response" handler="on_RollErrorDialog_response" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="messagedialog-vbox2">
         <property name="can_focus">False</property>
@@ -289,13 +292,11 @@ in the current state of this snapshot ?</property>
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="RollErrorLabel">
+          <object class="GtkLabel" id="RollErrorabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">You need to boot from a snapshot
  in order to roll back your system.</property>
-            <property name="justify">center</property>
-            <property name="ellipsize">middle</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -335,8 +336,6 @@ in the current state of this snapshot ?</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Rollback Successful !
 Reboot your system.</property>
-            <property name="justify">center</property>
-            <property name="ellipsize">middle</property>
           </object>
           <packing>
             <property name="expand">False</property>
