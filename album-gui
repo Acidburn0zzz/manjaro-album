@@ -36,15 +36,18 @@ class Handler:
 		for i, snap_name in list_snapshots():
 			snap_list.append([snap_name, False])
 
-	def on_CancelButton_clicked(self, widget):
+	def on_UnselectButton_clicked(self, widget):
 		line = 0
 		while line <  len(snap_list):
 			snap_list[line][1] = False
 			line += 1
 
+	#def on_RollConfButton_clicked(self, widget):
+		
+
 
 interface = Gtk.Builder()
-interface.add_from_file('/usr/share/album/album.glade')
+interface.add_from_file('gui/album.glade')
 
 snap_list = interface.get_object('snap_list')
 snap_list.clear()

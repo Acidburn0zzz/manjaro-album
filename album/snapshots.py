@@ -16,7 +16,7 @@ def create_snapshot(dir_path, snap_path):
 		mkdir(snapshot_dir_path)
 	call(["btrfs", "subvolume", "snapshot", dir_path, snap_path])
 
-def delete_snapshot(name_list):
+def delete_snapshots(name_list):
 	for snap_name in name_list:
 		call(["btrfs", "subvolume", "delete", join(snapshot_dir_path, snap_name)])
 
@@ -44,9 +44,9 @@ def print_snapshots_list():
 		print("	{}		{}".format(number, name))
 		#print("	--		-------------------------")
 
-def prompt_delete_snapshot():
+def prompt_delete_snapshots():
 	snapshots_list = list_snapshots()
-	delete_list = ()
+	delete_list = []
 	selec_numbers = input("""Enter the number(s) of the snapshot you want to delete
 separated by commas: """)
 	selec_numbers = selec_numbers.split(",")
@@ -66,7 +66,7 @@ separated by commas: """)
 	decision = input("Are you sure ? [y/N]: ")
 	if decision.lower() == "y":
 		mount_btrfs_root()
-		delete_snapshot(delete_list)
+		delete_snapshots(delete_list)
 		umount_btrfs_root()
 		update_grub()
 	else:

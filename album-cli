@@ -7,7 +7,7 @@ from subprocess import check_output
 import getopt
 
 from album.snap_and_roll import make_snap, make_rollback 
-from album.snapshots import print_snapshots_list, prompt_delete_snapshot
+from album.snapshots import print_snapshots_list, prompt_delete_snapshots
 
 def usage():
 	print("usage: ", argv[0], "actions")
@@ -56,7 +56,7 @@ def main(argv):
 			print_snapshots_list()
 		if opt in ("-d", "--delete"):
 			print_snapshots_list()
-			prompt_delete_snapshot()
+			prompt_delete_snapshots()
 
 
 if __name__ == "__main__":

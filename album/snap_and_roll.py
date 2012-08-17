@@ -8,7 +8,7 @@ from shutil import move
 
 from album.ver_file import snap_ver_file_exists, write_snap_ver_file
 from album.btrfs_root import mount_btrfs_root, umount_btrfs_root 
-from album.snapshots import create_snapshot, delete_snapshot
+from album.snapshots import create_snapshot
 from album.boot_folder import copy_vmlinuz_and_initramfs, move_vmlinuz_and_initramfs
 from album.grub import update_grub
 
@@ -72,7 +72,7 @@ You must boot into a snapshot to rollback your system.""")
 	write_snap_ver_file(main_system_dir_backup_path, snap_ver_new)
 
 	# roll back the system by creating a new snapshot from the snapshot to the main system
-	delete_snapshot(main_system_dir_path)
+	call(["btrfs", "subvolume", "delete", main_system_dir_path])
 	create_snapshot(snap_path, main_system_dir_path)
 
 	# erase the snapshot-version file copied in the main system
