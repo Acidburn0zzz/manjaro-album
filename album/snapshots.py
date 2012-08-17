@@ -62,7 +62,7 @@ separated by commas: """)
 			exit(1)
 	print("Here are the snapshot(s) you want to delete:")
 	for name in delete_list:
-		print("  --"+name)
+		print("  * "+name)
 	decision = input("Are you sure ? [y/N]: ")
 	if decision.lower() == "y":
 		mount_btrfs_root()
