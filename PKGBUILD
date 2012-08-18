@@ -13,21 +13,32 @@ makedepends=('git')
 options=(!emptydirs)
 install=
 source=()
-_gitroot=git://git.manjaro.org/core/album.git
-_gitname=$pkgname
+_git=yes
 
-build() {
+getsource() {
   cd "$srcdir"
   msg "Connecting to GIT server...."
 
-  if [[ -d "$_gitname" ]]; then
-     cd "$_gitname" && git pull origin && git checkout -b $pkgver
-     msg "The local files are updated."
+  if [ -d $1 ] ; then
+    if [ "$_git" == "yes" ] ; then
+       cd $1 && git pull origin master
+    else
+       cd $1 && git pull origin master && git checkout -b $pkgver
+    fi
+    msg "The local files are updated."
   else
-     git clone "$_gitroot" "$_gitname" && git checkout -b $pkgver
+    git clone $2 $1
+    if [ "$_git" != "yes" ] ; then
+       cd $1 && git checkout -b $pkgver $pkgver
+    fi
   fi
 
   msg "GIT checkout done or server timeout"
+}
+
+build() {
+  cd "$srcdir"
+  getsource "album" "git://git.manjaro.org/core/album.git"
 }
  
 package() {
