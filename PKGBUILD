@@ -13,9 +13,7 @@ makedepends=('git')
 options=(!emptydirs)
 install=
 source=()
-
-_gitroot=git://git.manjaro.org/core/album.git
-_gitname=$pkgname
+_git=yes
 
 build() {
   cd "$srcdir"
