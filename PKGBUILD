@@ -2,7 +2,7 @@
 # Maintainer: Guillaume Benoit <guillaume@manjaro.org>
 
 pkgname=album
-pkgver=20120817
+pkgver=0.8
 pkgrel=1
 pkgdesc="A snapshot manager for the btrfs filesystem"
 arch=(any)
@@ -21,11 +21,18 @@ build() {
   cd "$srcdir"
   msg "Connecting to GIT server...."
 
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
+  if [ -d $1 ] ; then
+    if [ "$_git" == "yes" ] ; then
+       cd $1 && git pull origin master
+    else
+       cd $1 && git pull origin master && git checkout -b $pkgver
+    fi
     msg "The local files are updated."
   else
-    git clone "$_gitroot" "$_gitname"
+    git clone $2 $1
+    if [ "$_git" != "yes" ] ; then
+       cd $1 && git checkout -b $pkgver $pkgver
+    fi
   fi
 
   msg "GIT checkout done or server timeout"

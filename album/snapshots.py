@@ -2,6 +2,7 @@
 # -*-coding:utf-8 -*
 
 from subprocess import call, check_output
+from subprocess import PIPE as subprocessPIPE
 from os import mkdir
 from os.path import join, isdir
 from sys import exit
@@ -14,11 +15,12 @@ from album.var import snapshot_dir_path, snapshot_dir
 def create_snapshot(dir_path, snap_path):
 	if isdir(snapshot_dir_path) is False:
 		mkdir(snapshot_dir_path)
-	call(["btrfs", "subvolume", "snapshot", dir_path, snap_path])
+	call(["btrfs", "subvolume", "snapshot", dir_path, snap_path], stdout=subprocessPIPE)
 
 def delete_snapshots(name_list):
 	for snap_name in name_list:
-		call(["btrfs", "subvolume", "delete", join(snapshot_dir_path, snap_name)])
+		print("Deleting {}...".format(snap_name))
+		call(["btrfs", "subvolume", "delete", join(snapshot_dir_path, snap_name)], stdout=subprocessPIPE)
 
 def list_snapshots():
 	first_list = str(check_output(["btrfs", "subvolume", "list", "/"]), "utf-8").split("\n")
@@ -47,8 +49,7 @@ def print_snapshots_list():
 def prompt_delete_snapshots():
 	snapshots_list = list_snapshots()
 	delete_list = []
-	selec_numbers = input("""Enter the number(s) of the snapshot you want to delete
-separated by commas: """)
+	selec_numbers = input("""Enter the number(s) of the snapshot you want to delete separated by commas: """)
 	selec_numbers = selec_numbers.split(",")
 	for number in selec_numbers:
 		try:
