@@ -1,0 +1,10 @@
+[Unit]
+Description=Umount /boot partition if booted on a snapshot
+After=local-fs.target
+ConditionFileExists=/snapshot-version
+
+[Service]
+ExecStart=/bin/umount /boot
+
+[Install]
+WantedBy=multi-user.target

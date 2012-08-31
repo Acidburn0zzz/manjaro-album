@@ -1,12 +1,31 @@
 #! /bin/sh
 
-# exit if we are in a snapshot
-if [ -f /snapshot-version ]; then
-  SNAPSHOT_VER=`cat /snapshot-version`
-  echo "You are in the snapshot ${SNAPSHOT_VER}. 
-It's not recommended to update grub.cfg
-Exiting"
-  exit 1
+# test if we are in a snapshot
+if [ ! -f /snapshot-version ]; then
+  grub-mkconfig -o /boot/grub/grub.cfg
+else
+  # umount /boot if it is mounted
+  if mountpoint -q /boot ; then
+    umount /boot
+  fi
+  # chroot to the main system to run grub-mkconfig
+  machine=`uname -m`
+  btrfs_device=`grub-probe --target=device /`
+  boot_device=`findmnt --fstab -uno SOURCE /boot`
+  btrfs_mount_point=/media/btrfs-root
+  main_system_dir=manjaro_${machine}
+  mkdir -p ${btrfs_mount_point}
+  mount -o subvol=${main_system_dir} ${btrfs_device} ${btrfs_mount_point}
+  mount ${boot_device} ${btrfs_mount_point}/boot
+  mount -t sysfs sysfs ${btrfs_mount_point}/sys
+  mount -t proc proc ${btrfs_mount_point}/proc
+  mount -o bind /run ${btrfs_mount_point}/run
+  mount -o bind /dev ${btrfs_mount_point}/dev
+  chroot ${btrfs_mount_point} grub-mkconfig -o /boot/grub/grub.cfg
+  umount ${btrfs_mount_point}/dev
+  umount ${btrfs_mount_point}/run
+  umount ${btrfs_mount_point}/proc
+  umount ${btrfs_mount_point}/sys
+  umount ${btrfs_mount_point}/boot
+  umount ${btrfs_mount_point}
 fi
-
-grub-mkconfig -o /boot/grub/grub.cfg

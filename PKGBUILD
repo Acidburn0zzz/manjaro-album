@@ -44,10 +44,11 @@ build() {
 package() {
   cd "$srcdir/$pkgname"
   python setup.py install --root="$pkgdir/" --optimize=1
-  install -Dm755 "${srcdir}/$pkgname/gui/album.glade" "${pkgdir}/usr/share/album/album.glade"
-  install -Dm755 "${srcdir}/$pkgname/album-gui" "${pkgdir}/usr/bin/album-gui"
+  #install -Dm755 "${srcdir}/$pkgname/gui/album.glade" "${pkgdir}/usr/share/album/album.glade"
+  #install -Dm755 "${srcdir}/$pkgname/album-gui" "${pkgdir}/usr/bin/album-gui"
   install -Dm755 "${srcdir}/$pkgname/album-cli" "${pkgdir}/usr/bin/album-cli"
   install -Dm755 "${srcdir}/$pkgname/scripts/11_btrfs-snapshots" "${pkgdir}/etc/grub.d/11_btrfs-snapshots"
+  install -Dm644 "${srcdir}/$pkgname/scripts/umountbootonsnapshot.service" "${pkgdir}/usr/lib/systemd/system/umountbootonsnapshot.service"
 }
 
 # vim:set ts=2 sw=2 et:

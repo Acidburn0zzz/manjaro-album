@@ -42,6 +42,9 @@ I will create a snapshot of the current system state.""".format(current_ver))
 	# write a file to know the snapshot version
 	write_snap_ver_file(snap_path, snap_ver)
 
+	# enable the systemd service to umount boot at startup in snapshot
+	call(["chroot", snap_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE)
+
 	# umount the root of the btrfs volume
 	umount_btrfs_root()
 
@@ -75,10 +78,14 @@ def make_rollback():
 	create_snapshot(main_system_dir_path, main_system_dir_backup_path)
 
 	# move initramfs and vmlinuz to the old main system /boot directory
+	call(["mount", "/boot"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 	move_vmlinuz_and_initramfs("/boot", main_system_dir_backup_path+"/boot")
 
 	# write a file to the recently moved system to be recognised as a snapshot
 	write_snap_ver_file(main_system_dir_backup_path, snap_ver_new)
+
+	# enable the systemd service to umount boot at startup in snapshot
+	call(["chroot", main_system_dir_backup_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE)
 
 	# roll back the system by creating a new main system subvolume from the snapshot
 	call(["btrfs", "subvolume", "delete", main_system_dir_path], stdout=subprocessPIPE)
@@ -87,8 +94,12 @@ def make_rollback():
 	# erase the snapshot-version file copied in the main system
 	remove(main_system_dir_path+snap_ver_file_path)
 
+	# disable the systemd service to umount boot at startup in snapshot
+	call(["chroot", main_system_dir_path, "systemctl", "disable", "umountbootonsnapshot.service"], stdout=subprocessPIPE)
+
 	# move initramfs and vmlinuz from the new main system to real /boot
 	move_vmlinuz_and_initramfs(main_system_dir_path+"/boot", "/boot")
+	call(["umount", "/boot"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# umount the root of the btrfs volume
 	umount_btrfs_root()
