@@ -42,7 +42,7 @@ I will create a snapshot of the current system state.""".format(current_ver))
 	write_snap_ver_file(snap_path, snap_ver)
 
 	# enable the systemd service to umount boot at startup in snapshot
-	call(["chroot", snap_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
+	call(["chroot", snap_path, "systemctl", "enable", "umountbootinsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# umount the root of the btrfs volume
 	umount_btrfs_root()
@@ -78,7 +78,7 @@ def make_rollback():
 	write_snap_ver_file(main_system_dir_backup_path, snap_ver_new)
 
 	# enable the systemd service to umount boot at startup in snapshot
-	call(["chroot", main_system_dir_backup_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
+	call(["chroot", main_system_dir_backup_path, "systemctl", "enable", "umountbootinsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# roll back the system by creating a new main system subvolume from the snapshot
 	call(["btrfs", "subvolume", "delete", main_system_dir_path], stdout=subprocessPIPE)
@@ -88,7 +88,7 @@ def make_rollback():
 	remove(main_system_dir_path+snap_ver_file_path)
 
 	# disable the systemd service to umount boot at startup in snapshot
-	call(["chroot", main_system_dir_path, "systemctl", "disable", "umountbootonsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
+	call(["chroot", main_system_dir_path, "systemctl", "disable", "umountbootinsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# move initramfs and vmlinuz from the new main system to real /boot
 	move_vmlinuz_and_initramfs(main_system_dir_path+"/boot", "/boot")
@@ -100,7 +100,7 @@ def make_rollback():
 	# update grub.cfg file
 	update_grub()
 
-	print("Your system has been successfully rolled back")
+	print("Your system has been successfully rolled back !")
 	print("For safety reason a snapshot of your system have been made before the rollback:")
 	print("  * "+snap_ver_new)
 
