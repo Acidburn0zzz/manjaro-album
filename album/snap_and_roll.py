@@ -17,7 +17,6 @@ from album.grub import update_grub
 from album.var import snap_ver_file_path, snapshot_dir_path, main_system_dir_path, date
 
 def make_snap():
-	# exit if we are already in a snapshot
 	if snap_ver_file_exists() is True:
 		with open(snap_ver_file_path, "r") as ver_file:
 			current_ver = ver_file.read()
@@ -43,7 +42,7 @@ I will create a snapshot of the current system state.""".format(current_ver))
 	write_snap_ver_file(snap_path, snap_ver)
 
 	# enable the systemd service to umount boot at startup in snapshot
-	call(["chroot", snap_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE)
+	call(["chroot", snap_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# umount the root of the btrfs volume
 	umount_btrfs_root()
@@ -55,13 +54,7 @@ I will create a snapshot of the current system state.""".format(current_ver))
 
 
 def make_rollback():
-	# exit if we are not in a snapshot
-	if snap_ver_file_exists() is False:
-		print("You are not in a recognised snapshot.")
-		print("You must boot into a snapshot to rollback your system.")
-		exit(1)
-	else:
-		print("Rolling back your system...")
+	print("Rolling back your system...")
 
 	# define snap_ver from snap_ver_file
 	with open(snap_ver_file_path, "r") as ver_file:
@@ -85,7 +78,7 @@ def make_rollback():
 	write_snap_ver_file(main_system_dir_backup_path, snap_ver_new)
 
 	# enable the systemd service to umount boot at startup in snapshot
-	call(["chroot", main_system_dir_backup_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE)
+	call(["chroot", main_system_dir_backup_path, "systemctl", "enable", "umountbootonsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# roll back the system by creating a new main system subvolume from the snapshot
 	call(["btrfs", "subvolume", "delete", main_system_dir_path], stdout=subprocessPIPE)
@@ -95,7 +88,7 @@ def make_rollback():
 	remove(main_system_dir_path+snap_ver_file_path)
 
 	# disable the systemd service to umount boot at startup in snapshot
-	call(["chroot", main_system_dir_path, "systemctl", "disable", "umountbootonsnapshot.service"], stdout=subprocessPIPE)
+	call(["chroot", main_system_dir_path, "systemctl", "disable", "umountbootonsnapshot.service"], stdout=subprocessPIPE, stderr=subprocessPIPE)
 
 	# move initramfs and vmlinuz from the new main system to real /boot
 	move_vmlinuz_and_initramfs(main_system_dir_path+"/boot", "/boot")
@@ -110,4 +103,16 @@ def make_rollback():
 	print("Your system has been successfully rolled back")
 	print("For safety reason a snapshot of your system have been made before the rollback:")
 	print("  * "+snap_ver_new)
+
+def prompt_rollback():
+	# exit if we are not in a snapshot
+	if snap_ver_file_exists() is False:
+		print("You are not in a recognised snapshot.")
+		print("You must boot into a snapshot to rollback your system.")
+		exit(1)
+	else:
+		print("Your main system will be roll back to the current state of this snapshot.")
+		decision = input("Are you sure ? [y/N]: ")
+		if decision.lower() == "y":
+			make_rollback()
 

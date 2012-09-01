@@ -47,7 +47,7 @@ def main(argv):
 		if opt in ("-s", "--snapshot"):
 			make_snap()
 		if opt in ("-r", "--rollback"):
-			make_rollback()
+			prompt_rollback()
 		if opt in ("-l", "--list"):
 			print_snapshots_list()
 		if opt in ("-d", "--delete"):
