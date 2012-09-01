@@ -6,7 +6,7 @@ from sys import argv, exit
 from subprocess import check_output
 import getopt
 
-from album.snap_and_roll import make_snap, make_rollback 
+from album.snap_and_roll import make_snap, prompt_rollback 
 from album.snapshots import print_snapshots_list, prompt_delete_snapshots
 
 def usage():
