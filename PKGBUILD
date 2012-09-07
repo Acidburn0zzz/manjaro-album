@@ -2,7 +2,7 @@
 # Maintainer: Guillaume Benoit <guillaume@manjaro.org>
 
 pkgname=album
-pkgver=0.8
+pkgver=0.9
 pkgrel=1
 pkgdesc="A snapshot manager for the btrfs filesystem"
 arch=(any)
