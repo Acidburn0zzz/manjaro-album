@@ -23,14 +23,12 @@ getsource() {
     if [ "$_git" == "yes" ] ; then
        cd $1 && git pull origin master
     else
-       cd $1 && git pull origin master && git checkout -b $pkgver
+       cd $1 && git pull origin master && git checkout "v$pkgver"
     fi
     msg "The local files are updated."
   else
     git clone $2 $1
-    if [ "$_git" != "yes" ] ; then
-       cd $1 && git checkout -b $pkgver $pkgver
-    fi
+    cd $1 && git checkout "v$pkgver"
   fi
 
   msg "GIT checkout done or server timeout"
